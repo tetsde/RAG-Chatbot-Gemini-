@@ -1,30 +1,31 @@
-#  RAG Chatbot with Google Gemini
+# RAG Chatbot with Google Gemini
 
-Dự án này xây dựng một **chatbot RAG (Retrieval-Augmented Generation)** sử dụng **Google Gemini API** và **Vector Database (FAISS)**.  
-Chatbot có khả năng:
-- Truy xuất dữ liệu nội bộ từ vector store.
-- Tích hợp với **Gemini** để tạo câu trả lời tự nhiên.
-- **Memory**: ghi nhớ hội thoại gần đây để phản hồi mạch lạc, không rời rạc.
+This project builds a **Retrieval-Augmented Generation (RAG) chatbot** using **Google Gemini API** and **Vector Database (FAISS)**.  
 
----
-
-##  Tính năng chính
-- **RAG System**: tìm kiếm thông tin từ tài liệu đã được embedding.
-- **Gemini Integration**: sử dụng model `gemini-2.0-flash` của Google.
-- **Conversation Memory**: chatbot nhớ 5 lượt hội thoại gần nhất.
-- **CLI Mode**: chạy trực tiếp trên terminal.
+The chatbot can:
+- Retrieve internal data from the vector store.  
+- Integrate with **Gemini** to generate natural responses.  
+- **Memory**: remember recent conversations to provide coherent replies.  
 
 ---
 
-## Dataset mẫu
-Hệ thống hiện đang chạy với **mẫu dữ liệu nội bộ công ty**, bao gồm:
-- **Tiến độ làm việc của công ty** (theo tháng, quý, năm).
-- **Lịch làm việc của nhân sự**.
-- **Các dự án đang dang dở** của từng phòng ban.  
+## ✨ Key Features
+- **RAG System**: search for information from pre-embedded documents.  
+- **Gemini Integration**: powered by Google’s `gemini-2.0-flash` model.  
+- **Conversation Memory**: the chatbot remembers the last 5 turns of dialogue.  
+- **CLI Mode**: run directly in the terminal.  
 
-Mục tiêu: hỗ trợ giám đốc dễ dàng kiểm soát tình hình công ty và truy xuất nhanh thông tin nội bộ.
+---
 
-Ví dụ một mẫu dữ liệu:
+## 📂 Sample Dataset
+The system is currently running with **sample internal company data**, including:  
+- **Company progress reports** (monthly, quarterly, yearly).  
+- **Employee work schedules**.  
+- **Ongoing projects** by departments.  
+
+**Goal**: help the director easily monitor company performance and quickly access internal information.  
+
+Example of a sample record:
 ```json
 {
   "id": "1",
