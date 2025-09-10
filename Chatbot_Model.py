@@ -7,11 +7,12 @@ def rag_chatbot(query):
     
     index, documents, model = get_vectorstore()
 
-    results = search(query, index, documents, model, k=3)
+    results = search(query, index, documents, model, k=15)
     context = "\n".join([
-        f"{doc['title']}: {doc['content']}" if isinstance(doc, dict) else str(doc)
-        for doc in results
-    ])
+    f"{doc.get('original_item', {}).get('title', 'Không có tiêu đề')}: {doc.get('original_item', {}).get('content', doc.get('chunk_text', ''))}"
+    if isinstance(doc, dict) else str(doc)
+    for doc in results
+])
 
     conversation_history.append({"role": "user", "content": query})
 
@@ -21,18 +22,24 @@ def rag_chatbot(query):
     ])
 
     prompt = f"""
-    Bạn là một trợ lý thông minh, luôn nhớ hội thoại trước đó. 
-    Đây là lịch sử hội thoại gần đây:
-    {history_text}
+Task: Trả lời câu hỏi mới từ người dùng dựa trên dữ liệu tham chiếu và lịch sử hội thoại gần đây, đảm bảo thông tin chính xác, đầy đủ, logic và liên quan trực tiếp.
 
-    Dưới đây là thông tin tham chiếu:
-    {context}
+Context: 
+1. Lịch sử hội thoại gần đây giữa người dùng và trợ lý: {history_text}
+2. Thông tin tham chiếu có thể hữu ích để trả lời câu hỏi: {context}
 
-    Câu hỏi mới:
-    {query}
+Role: Bạn là một trợ lý thông minh, luôn nhớ hội thoại trước đó, có khả năng phân tích, tổng hợp dữ liệu từ nhiều nguồn, lọc ra thông tin quan trọng và trả lời súc tích, dễ hiểu.
 
-    Trả lời bằng tiếng Việt, ngắn gọn và dễ hiểu.
-    """
+Example: 
+- Nếu câu hỏi là “X là gì?”, hãy trả lời giải thích chi tiết, kèm ví dụ minh họa và dẫn chứng từ thông tin tham chiếu khi có.
+- Nếu thông tin tham chiếu mâu thuẫn, hãy tổng hợp và nêu rõ nguồn hoặc ghi chú sự khác nhau.
+
+Instruction: 
+1. Đọc kỹ thông tin tham chiếu, tóm tắt các điểm quan trọng liên quan đến câu hỏi.
+2. Trả lời câu hỏi: {query}
+3. Trả lời bằng tiếng Việt, rõ ràng, đầy đủ thông tin, logic, có dẫn chứng nếu cần.
+4. Nếu không chắc chắn thông tin, hãy ghi chú rằng câu trả lời dựa trên dữ liệu tham chiếu hiện có.
+"""
 
     model_gemini = genai.GenerativeModel("gemini-2.0-flash")
     response = model_gemini.generate_content(prompt)
@@ -44,7 +51,7 @@ def rag_chatbot(query):
 
 if __name__ == "__main__":
     while True:
-        query = input(" User: ")
+        query = input("User: ")
         if query.lower() in ["exit", "quit"]:
             print("Tạm biệt!")
             break
